@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>学习通定位签到助手</title>
+    <script>
+        var qqflag = 0;
+        window.onload = function () {
+            re = /QQ\/\d\.\d\.\d+/.test(navigator.appVersion);
+            if (!re&&document.referrer!="http://xxt.xsk666.top/index2.html") {
+                qqflag=1;
+                return alert("检测到内鬼，终止服务！");
+            }
+            let phone = localStorage.getItem("phone");
+            document.getElementById("phone").value = phone ? phone : "";
+        }
+    </script>
+</head>
+
+<body>
+    <div class="hwrapper">
+        <h1 style="visibility:hidden">学习通定位签到助手</h1>
+        <h2>学习通定位签到助手</h2>
+        <h3>只是为了拯救滁大信院早读苦难学生</h3>
+    </div>
+
+    <div class="form-wrapper">
+        <p>注册</p>
+        <form>
+            <label>
+                <span class="p">学校：</span>
+                <input id="schoolcode" type="text" placeholder="滁州学院代号（四个英文字符）" />
+                <br />
+            </label>
+            <label>
+                <span>账号：</span>
+                <input id="phone" type="number" name="phone" placeholder="学习通手机号" />
+                <br />
+            </label>
+            <label>
+                <span>密码：</span>
+                <input id="pwd" type="password" name="pwd" placeholder="学习通密码" />
+                <br />
+            </label>
+
+            <label>
+                <input type="checkbox" id="check" name="login" value="ok">
+                <span>已阅读并同意<a href="index2.html">用户协议</a></span>
+            </label>
+            <input type="button" id="submit" value="登录" onclick="mysubmit()">
+            <!-- <input type="button" id="off" value="注销" onclick="myoff()"> -->
+        </form>
+    </div>
+    <p id="beian">皖ICP备2021012596号</p>
+</body>
+<script>
+    function mysubmit() {
+        if (qqflag) {
+            return alert('有内鬼！终止服务！');
+        }
+        else if (!document.getElementById("check").checked) {
+            return alert('如果要登录，请选中同意用户协议');
+        }
+        let schoolcode = document.getElementById("schoolcode")
+        if (schoolcode.value == '') {
+            return schoolcode.setAttribute("class", "placecolor");
+        } else if (btoa(schoolcode.value) != "Y2h6dQ==") {
+            return alert("你可能不是我校学生");
+        }
+        let phone = document.getElementById("phone").value;
+        let pwd = document.getElementById("pwd").value;
+        if (phone.length != 11 || pwd.length < 6) {
+            return alert("请检查手机号或密码的长度");
+        }
+        return alert("功能再写了，别急hhh");
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://xxt.xsk666.top:5501/send");
+        // xhr.open("POST", "http://localhost:5501/send");
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                var result = JSON.parse(xhr.responseText);
+                if (result.code === 200) {
+                    alert('注册成功');
+                    localStorage.setItem("phone", phone);
+                } else {
+                    alert(result.msg);
+                }
+            }
+        }
+        data = {
+            "phone": phone,
+            "pwd": pwd
+        }
+        xhr.send(JSON.stringify(data));
+    }
+</script>
+
+</html>
